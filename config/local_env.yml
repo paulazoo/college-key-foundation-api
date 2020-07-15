@@ -1,0 +1,4 @@
+# segment_write_key: 'axuyhKGkCoI1WgqAgZwynkpjQJGryPB7'
+COLLEGE_KEY_FOUNDATION_DATABASE_PASSWORD: 'college_key_foundation'
+SKIP_SASS_BINARY_DOWNLOAD_FOR_CI: 'true'
+SKIP_NODE_SASS_TESTS: 'true'
