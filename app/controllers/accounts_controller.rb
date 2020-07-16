@@ -55,8 +55,6 @@ class AccountsController < ApplicationController
     render(json: @account.to_json)
   end
 
-  def 
-
   private
 
   def account_params
