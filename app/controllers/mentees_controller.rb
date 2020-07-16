@@ -34,12 +34,12 @@ class MenteesController < ApplicationController
     @mentor = Mentor.find(mentor_params[:mentor_id])
     render(json: { message: 'Mentor does not exist'}) if @mentor.blank?
 
-    
+    @mentor.mentees << @mentee
 
-    if @mentee.save && @mentor.save
+    if @mentor.save
       render(json: { mentee: @mentee, mentor: @mentor }, status: :created)
     else
-      render(json: @mentee.errors, status: :unprocessable_entity)
+      render(json: @mentor.errors, status: :unprocessable_entity)
     end
   end
 

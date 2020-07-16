@@ -1,7 +1,7 @@
 class Mentee < ApplicationRecord
   has_one :account, :as => :user
 
-  has_many :mentors_mentees, dependent: :destroy
-  has_many :mentors, through: :mentors_mentees
+  has_one :mentors_mentee, dependent: :destroy
+  has_one :mentor, through: :mentors_mentees
 
 end
