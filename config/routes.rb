@@ -7,5 +7,7 @@ Rails.application.routes.draw do
   resources :mentors, only: %i[index create]
 
   resources :mentees, only: %i[index create]
+
+  resources :newsletter_emails, only: %i[index create]
   
 end
