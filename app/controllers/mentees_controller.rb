@@ -26,6 +26,22 @@ class MenteesController < ApplicationController
     end
   end
 
+  # POST /mentees/match
+  def match
+    @mentee = Mentee.find(mentee_params[:mentee_id])
+    render(json: { message: 'Mentee does not exist' }) if @mentee.blank?
+
+    @mentor = Mentor.find(mentor_params[:mentor_id])
+    render(json: { message: 'Mentor does not exist'}) if @mentor.blank?
+
+    
+
+    if @mentee.save && @mentor.save
+      render(json: { mentee: @mentee, mentor: @mentor }, status: :created)
+    else
+      render(json: @mentee.errors, status: :unprocessable_entity)
+    end
+  end
 
   private
 
@@ -34,6 +50,6 @@ class MenteesController < ApplicationController
   end
 
   def mentee_params
-    params.permit([:email])
+    params.permit([:email, :mentee_id, :mentor_id])
   end
 end

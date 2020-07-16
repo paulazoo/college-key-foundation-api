@@ -12,6 +12,10 @@ Rails.application.routes.draw do
 
   resources :mentees, only: %i[index create]
 
+  resources :mentees do
+    post 'match', on: :member
+  end
+
   resources :newsletter_emails, only: %i[index create]
   
 end
