@@ -15,24 +15,26 @@ class AccountsController < ApplicationController
       family_name = decoded_hash[0]['family_name']
       image_url = decoded_hash[0]['picture']
 
-      @account = Account.where(email: email).first_or_initialize()
+      @account = Account.find_by(email: email)
 
-      # If before first logs, 
-      # record is created but some props are null, 
-      # so first_or_initialize alone won't update the record
-      @account.update(
-        name: name,
-        image_url: image_url,
-        given_name: given_name,
-        family_name: family_name,
-        google_id: google_id
-      )
+      if !@account.blank?
+        @account.update(
+          name: name,
+          image_url: image_url,
+          given_name: given_name,
+          family_name: family_name,
+          google_id: google_id
+        )
 
-      if @account.save
-        # context: { ip: request.remote_ip }
-        render(json: @account.to_json, status: :ok)
+        if @account.save
+          # context: { ip: request.remote_ip }
+          render(json: @account.to_json, status: :ok)
+        else
+          render(json: { errors: @account.errors })
+        end
+
       else
-        render(json: { errors: @account.errors })
+        render(json: { message: 'You are not a mentor or mentee!' }, status: :ok)
       end
 
     else
