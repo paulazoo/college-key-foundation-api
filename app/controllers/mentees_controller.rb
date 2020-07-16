@@ -22,7 +22,7 @@ class MenteesController < ApplicationController
       end
 
     else
-      render(json: { message: 'Account already exists!' })
+      render(json: { message: 'Account already exists' })
     end
   end
 
