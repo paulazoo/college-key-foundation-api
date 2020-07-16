@@ -7,13 +7,9 @@ class NewsletterEmailsController < ApplicationController
 
   # POST /newsletter_emails
   def create
-    @email_newsletter = NewsletterEmail.find_or_create_by(email: newsletter_email_params[:email])
+    @newsletter_email = NewsletterEmail.find_or_create_by(email: newsletter_email_params[:email])
 
-    if @newsletter_email.save
-      render(json: @newsletter_email.to_json, status: :created)
-    else
-      render(json: @newsletter_email.errors, status: :unprocessable_entity)
-    end
+    render(json: @newsletter_email, status: :created)
   end
 
 
