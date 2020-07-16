@@ -28,7 +28,7 @@ class AccountsController < ApplicationController
 
         if @account.save
           # context: { ip: request.remote_ip }
-          render(json: @account.to_json, status: :ok)
+          render(json: @account, status: :ok)
         else
           render(json: { errors: @account.errors })
         end
