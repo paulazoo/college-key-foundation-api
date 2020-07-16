@@ -1,14 +1,14 @@
 class AccountsController < ApplicationController
-  before_action :authenticate_user, only: %i[show]
-  before_action :set_user, only: %i[show]
-  before_action :authorize_user, only: %i[show]
+  before_action :authenticate_account, only: %i[show update index]
+  before_action :set_account, only: %i[show update]
+  before_action :authorize_account, only: %i[show update index]
 
   # GET /login
   def login
     decoded_hash = decoded_token
     logger.debug(decoded_hash)
     if decoded_hash && !decoded_hash.empty?
-      google_id = decoded_hash[0]['sub']
+      account_id = decoded_hash[0]['sub']
       email = decoded_hash[0]['email']
       name = decoded_hash[0]['name']
       given_name = decoded_hash[0]['given_name']
@@ -23,7 +23,7 @@ class AccountsController < ApplicationController
           image_url: image_url,
           given_name: given_name,
           family_name: family_name,
-          google_id: google_id
+          google_id: account_id
         )
 
         if @account.save
@@ -55,10 +55,24 @@ class AccountsController < ApplicationController
     render(json: @account.to_json)
   end
 
+  # PUT /accounts/:account_id
+  def update
+    render(json: { errors: 'Not the correct account!' }, status: :unauthorized) if current_account != @account
+
+    @account.bio = account_params[:bio] if account_params[:bio]
+    @account.phone = account_params[:phone] if account_params[:phone]
+
+    if @account.save
+      render(json: @account, status: :ok)
+    else
+      render(json: @account.errors, status: :unprocessable_entity)
+    end
+  end
+
   private
 
   def account_params
-    params.permit(:image_url, :bio, :display_name)
+    params.permit(:image_url, :bio, :display_name, :phone)
   end
 
   def set_account

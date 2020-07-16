@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_16_170234) do
+ActiveRecord::Schema.define(version: 2020_07_16_220020) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,27 @@ ActiveRecord::Schema.define(version: 2020_07_16_170234) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["user_type", "user_id"], name: "index_accounts_on_user_type_and_user_id"
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.string "link"
+    t.string "image_url"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.integer "kind", default: 0
+  end
+
+  create_table "invitations", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "event_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["account_id"], name: "index_invitations_on_account_id"
+    t.index ["event_id"], name: "index_invitations_on_event_id"
   end
 
   create_table "mentees", force: :cascade do |t|
@@ -59,6 +80,8 @@ ActiveRecord::Schema.define(version: 2020_07_16_170234) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  add_foreign_key "invitations", "accounts"
+  add_foreign_key "invitations", "events"
   add_foreign_key "mentors_mentees", "mentees"
   add_foreign_key "mentors_mentees", "mentors"
 end
