@@ -28,7 +28,7 @@ class AccountsController < ApplicationController
 
         if @account.save
           # context: { ip: request.remote_ip }
-          render(json: @account, status: :ok)
+          render(json: { message: 'Logged in successfully!', account: @account, user: @account.user }, status: :ok)
         else
           render(json: { errors: @account.errors })
         end
