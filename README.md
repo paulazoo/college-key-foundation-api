@@ -1,24 +1,13 @@
-# README
+# College Key Foundation Backend
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## General
 
-Things you may want to cover:
+API backend for College Key Foundation website, written in Ruby on Rails by Paula Zhu.
 
-* Ruby version
+You can only request the server from the following origins:
 
-* System dependencies
+- https://www.collegekeyfoundation.org
+- https://college-key-foundation.herokuapp.com/
+- http://localhost:3000
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## Models/Schema
