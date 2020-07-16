@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_16_060302) do
+ActiveRecord::Schema.define(version: 2020_07_16_170234) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,12 @@ ActiveRecord::Schema.define(version: 2020_07_16_060302) do
     t.index ["mentee_id"], name: "index_mentors_mentees_on_mentee_id"
     t.index ["mentor_id", "mentee_id"], name: "index_mentors_mentees_on_mentor_id_and_mentee_id", unique: true
     t.index ["mentor_id"], name: "index_mentors_mentees_on_mentor_id"
+  end
+
+  create_table "newsletter_emails", force: :cascade do |t|
+    t.string "email"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   add_foreign_key "mentors_mentees", "mentees"
