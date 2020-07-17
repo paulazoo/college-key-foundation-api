@@ -1,9 +1,10 @@
 class MentorsController < ApplicationController
+  before_action :authenticate_account, only: %i[create index]
 
   # GET menters
   def index
     @mentors = Mentor.all
-    json_response(@mentor)
+    json_response(@mentors)
   end
 
   # POST /mentors
