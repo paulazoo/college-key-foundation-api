@@ -28,7 +28,7 @@ class AccountsController < ApplicationController
 
         if @account.save
           # context: { ip: request.remote_ip }
-          
+
           if @account.user_type == 'Mentor'
             render(json: { message: 'Logged in successfully!', account: @account, user: @account.user }, status: :ok)
           elsif @account.user_type == 'Mentee'
@@ -51,7 +51,7 @@ class AccountsController < ApplicationController
   # GET /accounts
   def index
     @accounts = Account.all
-    json_response(@accounts)
+    json_response(@accounts.to_json(include: :user))
   end
 
   # GET /accounts/:account_id

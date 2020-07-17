@@ -5,7 +5,7 @@ class MenteesController < ApplicationController
   # GET mentees
   def index
     @mentees = Mentee.all
-    render(json: @mentees.to_json(include: [:account, :mentor]))
+    render(json: @mentees.to_json(include: [:account, mentor: { include: :account }]))
   end
 
   # POST /mentees
