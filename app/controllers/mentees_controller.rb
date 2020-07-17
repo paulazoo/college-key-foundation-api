@@ -1,4 +1,6 @@
 class MenteesController < ApplicationController
+  before_action :authenticate_account, only: %i[create index match]
+  before_action :set_mentee, only: %i[match]
 
   # GET mentees
   def index
@@ -26,12 +28,12 @@ class MenteesController < ApplicationController
     end
   end
 
-  # POST /mentees/match
+  # POST /mentees/:mentee_id/match
   def match
     @mentee = Mentee.find(mentee_params[:mentee_id])
     render(json: { message: 'Mentee does not exist' }) if @mentee.blank?
 
-    @mentor = Mentor.find(mentor_params[:mentor_id])
+    @mentor = Mentor.find(mentee_params[:mentor_id])
     render(json: { message: 'Mentor does not exist'}) if @mentor.blank?
 
     @mentor.mentees << @mentee
@@ -46,7 +48,7 @@ class MenteesController < ApplicationController
   private
 
   def set_mentee
-    @mentee = Mentee.find(params[:id])
+    @mentee = Mentee.find(params[:mentee_id])
   end
 
   def mentee_params

@@ -12,7 +12,7 @@ Rails.application.routes.draw do
 
   resources :mentees, only: %i[index create]
 
-  resources :mentees do
+  resources :mentees, param: :mentee_id do
     post 'match', on: :member
   end
 
