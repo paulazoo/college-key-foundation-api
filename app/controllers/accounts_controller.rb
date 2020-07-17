@@ -23,12 +23,18 @@ class AccountsController < ApplicationController
           image_url: image_url,
           given_name: given_name,
           family_name: family_name,
-          google_id: account_id
+          google_id: account_id,
         )
 
         if @account.save
           # context: { ip: request.remote_ip }
-          render(json: { message: 'Logged in successfully!', account: @account, user: @account.user }, status: :ok)
+          
+          if @account.user_type == 'Mentor'
+            render(json: { message: 'Logged in successfully!', account: @account, user: @account.user }, status: :ok)
+          elsif @account.user_type == 'Mentee'
+            render(json: { message: 'Logged in successfully!', account: @account, user: @account.user.to_json(include: [:mentor]) }, status: :ok)
+          end
+
         else
           render(json: { errors: @account.errors })
         end
