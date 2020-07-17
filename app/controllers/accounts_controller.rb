@@ -65,8 +65,7 @@ class AccountsController < ApplicationController
   def update
     render(json: { errors: 'Not the correct account!' }, status: :unauthorized) if current_account != @account
 
-    @account.bio = account_params[:bio] if account_params[:bio]
-    @account.phone = account_params[:phone] if account_params[:phone]
+    @account.update(account_params)
 
     if @account.save
       render(json: @account, status: :ok)
@@ -78,7 +77,7 @@ class AccountsController < ApplicationController
   private
 
   def account_params
-    params.permit(:image_url, :bio, :display_name, :phone)
+    params.permit(:image_url, :bio, :display_name, :phone, :school, :grad_year)
   end
 
   def set_account
