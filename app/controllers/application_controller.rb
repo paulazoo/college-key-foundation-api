@@ -24,7 +24,7 @@ class ApplicationController < ActionController::API
     decoded_hash = decoded_token
     if decoded_hash && !decoded_hash.empty?
       email = decoded_hash[0]['email']
-      @account = Account.find_by_email(email)
+      @account = Account.find_by(email: email)
     end
   end
 
