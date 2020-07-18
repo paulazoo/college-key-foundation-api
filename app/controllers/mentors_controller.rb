@@ -17,6 +17,17 @@ class MentorsController < ApplicationController
       @mentor.account = Account.new(user: @mentor, email: mentor_params[:email])
 
       if @mentor.save
+        Analytics.identify(
+          user_id: @account.id.to_s,
+          traits: {
+            rols: @account.user_type.to_s,
+            account_id: @account.id.to_s,
+            email: @account.email.to_s,
+            name: @account.name.to_s,
+            google_id: @account.google_id.to_s,
+          },
+        )
+        
         render(json: @mentor.to_json, status: :created)
       else
         render(json: @mentor.errors, status: :unprocessable_entity)

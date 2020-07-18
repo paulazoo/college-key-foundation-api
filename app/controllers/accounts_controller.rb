@@ -27,14 +27,10 @@ class AccountsController < ApplicationController
         )
 
         if @account.save
-          Analytics.identify(
-            user_id: @account.id,
-            traits: {
-              account_id: @account.id,
-              email: @account.email.to_s,
-              name: @account.name.to_s,
-              google_id: @account.google_id.to_s,
-            },
+          Analytics.track(
+            user_id: @account.id.to_s,
+            event: 'Logged in',
+            properties: { role: @account.user_type.to_s }
             context: { ip: request.remote_ip }
           )
 
