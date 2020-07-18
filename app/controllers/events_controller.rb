@@ -9,10 +9,9 @@ class EventsController < ApplicationController
 
   # POST /events
   def create
-    @event = Event.new(name: event_params[:name])
+    @event = Event.new(name: event_params[:name], kind: event_params[:kind])
     @event.description = event_params[:description] if event_params[:description]
     @event.description = event_params[:link] if event_params[:link]
-    @event.description = event_params[:kind] if event_params[:kind]
     @event.description = event_params[:start_time] if event_params[:start_time]
     @event.description = event_params[:end_time] if event_params[:end_time]
     @event.description = event_params[:image_url] if event_params[:image_url]

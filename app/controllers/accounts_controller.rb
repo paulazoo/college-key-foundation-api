@@ -27,7 +27,16 @@ class AccountsController < ApplicationController
         )
 
         if @account.save
-          # context: { ip: request.remote_ip }
+          Analytics.identify(
+            account_id: @account.id,
+            traits: {
+              account_id: @account.id,
+              email: @account.email.to_s,
+              name: @user.name.to_s,
+              google_id: @user.google_id.to_s,
+            },
+            context: { ip: request.remote_ip }
+          )
 
           if @account.user_type == 'Mentor'
             render(json: { message: 'Logged in successfully!', account: @account, user: @account.user.as_json(include: [mentees: { include: :account }]) }, status: :ok)
