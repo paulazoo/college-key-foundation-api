@@ -15,6 +15,7 @@ class NewsletterEmailsController < ApplicationController
       render(json: @newsletter_email, status: :created)
     else
       render(json: @newsletter_email.errors, status: :unprocessable_entity)
+    end
   end
 
 
@@ -27,5 +28,4 @@ class NewsletterEmailsController < ApplicationController
   def newsletter_email_params
     params.permit([:email])
   end
-
 end
