@@ -18,16 +18,16 @@ class MentorsController < ApplicationController
 
       if @mentor.save
         Analytics.identify(
-          user_id: @account.id.to_s,
+          user_id: @mentor.account.id.to_s,
           traits: {
-            rols: @account.user_type.to_s,
-            account_id: @account.id.to_s,
-            email: @account.email.to_s,
-            name: @account.name.to_s,
-            google_id: @account.google_id.to_s,
+            role: 'Mentor',
+            account_id: @mentor.account.id.to_s,
+            email: @mentor.account.email.to_s,
+            name: @mentor.account.name.to_s,
+            google_id: @mentor.account.google_id.to_s,
           },
         )
-        
+
         render(json: @mentor.to_json, status: :created)
       else
         render(json: @mentor.errors, status: :unprocessable_entity)

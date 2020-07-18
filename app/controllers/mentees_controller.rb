@@ -19,16 +19,14 @@ class MenteesController < ApplicationController
 
       if @mentee.save
         Analytics.identify(
-          user_id: @account.id.to_s,
+          user_id: @mentee.account.id.to_s,
           traits: {
-            rols: @account.user_type.to_s,
-            account_id: @account.id.to_s,
-            email: @account.email.to_s,
-            name: @account.name.to_s,
-            google_id: @account.google_id.to_s,
+            role: 'Mentee',
+            account_id: @mentee.account.id.to_s,
+            email: mentee_params[:email],
           },
         )
-        
+
         render(json: @mentee.to_json, status: :created)
       else
         render(json: @mentee.errors, status: :unprocessable_entity)
