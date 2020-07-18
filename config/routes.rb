@@ -16,6 +16,8 @@ Rails.application.routes.draw do
     post 'match', on: :member
   end
 
+  resources :events, only: %i[index create]
+
   resources :newsletter_emails, only: %i[index create]
   
 end
