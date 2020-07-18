@@ -3,8 +3,12 @@ class NewsletterEmailsController < ApplicationController
 
   # GET newsletter_emails
   def index
-    @newsletter_emails = NewsletterEmail.all
-    json_response(@newsletter_emails)
+    if is_master
+      @newsletter_emails = NewsletterEmail.all
+      render(json: @newsletter_emails, status: :ok)
+    else
+      render(json: { message: 'You are not master' }, status: :unauthorized)
+    end
   end
 
   # POST /newsletter_emails

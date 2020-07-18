@@ -55,8 +55,12 @@ class AccountsController < ApplicationController
 
   # GET /accounts
   def index
-    @accounts = Account.all
-    json_response(@accounts.to_json(include: :user))
+    if is_master
+      @accounts = Account.all
+      render(json: @accounts.to_json(include: :user))
+    else
+      render(json: { message: 'You are not master' }, status: :unauthorized)
+    end
   end
 
   # GET /accounts/:account_id

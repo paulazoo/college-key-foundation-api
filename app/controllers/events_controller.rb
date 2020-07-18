@@ -3,8 +3,12 @@ class EventsController < ApplicationController
 
   # GET /events
   def index
-    @events = Event.all
-    json_response(@events)
+    if is_master
+      @events = Event.all
+      json_response(@events)
+    else
+      render(json: { message: 'You are not master' }, status: :unauthorized)
+    end
   end
 
   # POST /events
@@ -17,14 +21,14 @@ class EventsController < ApplicationController
     @event.description = event_params[:image_url] if event_params[:image_url]
 
     if @event.save
-      
+
       if @event.kind === 'invite-only' && event_params[:invites]
         event_params[:invitees].each do |email|
           a = Account.find_or_create_by(email: email)
           @event.invitations.create!(account: a)
         end
       end
-      
+
       render(json: @event, status: :created)
     else
       render(json: @event.errors, status: :created)

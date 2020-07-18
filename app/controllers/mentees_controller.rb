@@ -4,8 +4,12 @@ class MenteesController < ApplicationController
 
   # GET mentees
   def index
-    @mentees = Mentee.all
-    render(json: @mentees.to_json(include: [:account, mentor: { include: :account }]))
+    if is_master
+      @mentees = Mentee.all
+      render(json: @mentees.to_json(include: [:account, mentor: { include: :account }]))
+    else
+      render(json: { message: 'You are not master' }, status: :unauthorized)
+    end
   end
 
   # POST /mentees

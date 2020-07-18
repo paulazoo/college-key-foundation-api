@@ -3,8 +3,12 @@ class MentorsController < ApplicationController
 
   # GET menters
   def index
-    @mentors = Mentor.all
-    json_response(@mentors)
+    if is_master
+      @mentors = Mentor.all
+      json_response(@mentors)
+    else
+      render(json: { message: 'You are not master' }, status: :unauthorized)
+    end
   end
 
   # POST /mentors
