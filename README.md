@@ -53,6 +53,7 @@ You can only request the server from the following origins:
 - _end_time_: `DateTime`, ending time
 - has many invitations
 
+
 ## HTTP Endpoints
 
 _IMPORTANT: for all endpoints EXCEPT for login and POST /newsletter_emails, you must pass a Google OAuth JWT authorization token. Pass via the following request header:_
