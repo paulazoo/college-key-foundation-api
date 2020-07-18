@@ -1,4 +1,6 @@
 class NewsletterEmailsController < ApplicationController
+  before_action :authenticate_account, only: %i[index]
+
   # GET newsletter_emails
   def index
     @newsletter_emails = NewsletterEmail.all
