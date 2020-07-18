@@ -54,6 +54,13 @@ You can only request the server from the following origins:
 - has many invitations
 
 
+## Masters
+- `is_master` check is for endpoints having to do with the master controller
+- only the following accounts have this permission
+  - paulazhu@college.harvard.edu
+  - collegekeyfoundation@gmail.com
+
+
 ## HTTP Endpoints
 
 _IMPORTANT: for all endpoints EXCEPT for login and POST /newsletter_emails, you must pass a Google OAuth JWT authorization token. Pass via the following request header:_
