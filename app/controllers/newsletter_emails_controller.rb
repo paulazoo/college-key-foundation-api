@@ -9,7 +9,7 @@ class NewsletterEmailsController < ApplicationController
   def create
     @newsletter_email = NewsletterEmail.find_or_create_by(email: newsletter_email_params[:email])
 
-    if @newsletter_emails.save
+    if @newsletter_email.save
       render(json: @newsletter_email, status: :created)
     else
       render(json: @newsletter_email.errors, status: :unprocessable_entity)
