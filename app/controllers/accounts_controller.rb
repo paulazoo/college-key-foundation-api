@@ -30,9 +30,9 @@ class AccountsController < ApplicationController
           # context: { ip: request.remote_ip }
 
           if @account.user_type == 'Mentor'
-            render(json: { message: 'Logged in successfully!', account: @account, user: @account.user }, status: :ok)
+            render(json: { message: 'Logged in successfully!', account: @account, user: @account.user.as_json(include: [mentees: { include: :account }]) }, status: :ok)
           elsif @account.user_type == 'Mentee'
-            render(json: { message: 'Logged in successfully!', account: @account, user: @account.user.to_json(include: [:mentor]) }, status: :ok)
+            render(json: { message: 'Logged in successfully!', account: @account, user: @account.user.as_json(include: [mentor: { include: :account }]) }, status: :ok)
           end
 
         else
@@ -58,7 +58,11 @@ class AccountsController < ApplicationController
   def show
     render(json: { errors: 'Not the correct account!' }, status: :unauthorized) if current_account != @account
 
-    render(json: @account.to_json)
+    if @account.user_type == 'Mentor'
+      render(json: { account: @account, user: @account.user.as_json(include: [mentees: { include: :account }]) }, status: :ok)
+    elsif @account.user_type == 'Mentee'
+      render(json: { account: @account, user: @account.user.as_json(include: [mentor: { include: :account }]) }, status: :ok)
+    end
   end
 
   # PUT /accounts/:account_id
