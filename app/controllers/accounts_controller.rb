@@ -28,12 +28,12 @@ class AccountsController < ApplicationController
 
         if @account.save
           Analytics.identify(
-            userId: @account.id,
+            user_id: @account.id,
             traits: {
               account_id: @account.id,
               email: @account.email.to_s,
-              name: @user.name.to_s,
-              google_id: @user.google_id.to_s,
+              name: @account.name.to_s,
+              google_id: @account.google_id.to_s,
             },
             context: { ip: request.remote_ip }
           )
