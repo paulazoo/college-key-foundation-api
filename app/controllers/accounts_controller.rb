@@ -28,7 +28,7 @@ class AccountsController < ApplicationController
 
         if @account.save
           Analytics.identify(
-            account_id: @account.id,
+            userId: @account.id,
             traits: {
               account_id: @account.id,
               email: @account.email.to_s,
