@@ -30,7 +30,7 @@ class AccountsController < ApplicationController
           Analytics.track(
             user_id: @account.id.to_s,
             event: 'Logged in',
-            properties: { role: @account.user_type.to_s }
+            properties: { role: @account.user_type.to_s },
             context: { ip: request.remote_ip }
           )
 
