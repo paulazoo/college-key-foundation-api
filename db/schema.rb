@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_17_032650) do
+ActiveRecord::Schema.define(version: 2020_07_19_062207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 2020_07_17_032650) do
     t.datetime "start_time"
     t.datetime "end_time"
     t.integer "kind", default: 0
+    t.string "host"
   end
 
   create_table "invitations", force: :cascade do |t|
