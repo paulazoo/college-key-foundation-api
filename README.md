@@ -88,6 +88,7 @@ _IMPORTANT: for all endpoints EXCEPT for login and POST /newsletter_emails, you 
 ### Newsletter Email
 - _GET /events_: returns list of all events (MUST be `is_master`)
 - _POST /newsletter_emails_: create a newsletter email (AUTHORIZATION NOT NEEDED)
+  - allowed params: `:email`
 
 ### Event
 - _GET /events_: returns list of all events (MUST be `is_master`)
