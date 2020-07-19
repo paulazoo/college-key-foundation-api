@@ -1,5 +1,5 @@
 class MenteesController < ApplicationController
-  before_action :authenticate_account, only: %i[create index match]
+  before_action :authenticate_account, only: %i[create index match batch]
   before_action :set_mentee, only: %i[match]
 
   # GET mentees
@@ -14,6 +14,8 @@ class MenteesController < ApplicationController
 
   # POST /mentees
   def create
+    render(json: { message: 'You are not master' }, status: :unauthorized) if !is_master
+
     @account = Account.find_by(email: mentee_params[:email])
 
     if @account.blank?
@@ -43,6 +45,8 @@ class MenteesController < ApplicationController
 
   # POST /mentees/:mentee_id/match
   def match
+    render(json: { message: 'You are not master' }, status: :unauthorized) if !is_master
+
     @mentee = Mentee.find(mentee_params[:mentee_id])
     render(json: { message: 'Mentee does not exist' }) if @mentee.blank?
 
@@ -60,31 +64,41 @@ class MenteesController < ApplicationController
 
   # POST /mentees/batch
   def batch
-    @account = Account.find_by(email: mentee_params[:email])
+    render(json: { message: 'You are not master' }, status: :unauthorized) if !is_master
 
-    if @account.blank?
-      @mentee = Mentee.new()
+    parsed_emails = mentee_params[:batch_emails].split(", ")
 
-      @mentee.account = Account.new(user: @mentee, email: mentee_params[:email])
+    finished_mentees = []
 
-      if @mentee.save
-        Analytics.identify(
-          user_id: @mentee.account.id.to_s,
-          traits: {
-            role: 'Mentee',
-            account_id: @mentee.account.id.to_s,
-            email: mentee_params[:email],
-          },
-        )
+    parsed_emails.each do |email|
+      @account = Account.find_by(email: email)
 
-        render(json: @mentee.to_json, status: :created)
+      if @account.blank?
+        @mentee = Mentee.new()
+
+        @mentee.account = Account.new(user: @mentee, email: email)
+
+        if @mentee.save
+          Analytics.identify(
+            user_id: @mentee.account.id.to_s,
+            traits: {
+              role: 'Mentee',
+              account_id: @mentee.account.id.to_s,
+              email: email,
+            },
+          )
+
+          finished_mentees.push(@mentee)
+        else
+          puts @mentee.errors
+        end
+
       else
-        render(json: @mentee.errors, status: :unprocessable_entity)
+        puts 'Account already exists'
       end
-
-    else
-      render(json: { message: 'Account already exists' })
     end
+
+    render(json: { mentees: finished_mentees, status: :ok })
   end
 
   private
@@ -94,6 +108,6 @@ class MenteesController < ApplicationController
   end
 
   def mentee_params
-    params.permit([:email, :mentee_id, :mentor_id])
+    params.permit([:email, :mentee_id, :mentor_id, :batch_emails])
   end
 end
