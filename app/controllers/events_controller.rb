@@ -19,6 +19,7 @@ class EventsController < ApplicationController
     @event.description = event_params[:start_time] if event_params[:start_time]
     @event.description = event_params[:end_time] if event_params[:end_time]
     @event.description = event_params[:image_url] if event_params[:image_url]
+    @event.description = event_params[:host] if event_params[:host]
 
     if @event.save
 
@@ -42,7 +43,7 @@ class EventsController < ApplicationController
   end
 
   def event_params
-    params.permit([:name, :description, :link, :kind, :start_time, :end_time, :image_url, invites: []])
+    params.permit([:name, :description, :link, :kind, :start_time, :end_time, :image_url, :host, invites: []])
   end
   
 end
