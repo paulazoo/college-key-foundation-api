@@ -70,8 +70,8 @@ _IMPORTANT: for all endpoints EXCEPT for login and POST /newsletter_emails, you 
 ### Account
 - _GET /login_: returns account corresponding to token
 - _GET /accounts_: returns list of all accounts (MUST be `is_master`)
-- _GET /accounts/:account_id_: returns account information corresponding to `:account_id` (MUST be same account as `current_account`)
-- _PUT /accounts/:account_id_: updates account information corresponding to `:account_id` (MUST be same account as `current_account`)
+- _GET /accounts/:id_: returns account information corresponding to `:account_id` (MUST be same account as `current_account`)
+- _PUT /accounts/:id_: updates account information corresponding to `:account_id` (MUST be same account as `current_account`)
 
 ### Mentee
 - _GET /mentees_: returns list of all mentees (MUST be `is_master`)

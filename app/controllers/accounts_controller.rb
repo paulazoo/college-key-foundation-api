@@ -63,7 +63,7 @@ class AccountsController < ApplicationController
     end
   end
 
-  # GET /accounts/:account_id
+  # GET /accounts/:id
   def show
     render(json: { errors: 'Not the correct account!' }, status: :unauthorized) if current_account != @account
 
@@ -74,7 +74,7 @@ class AccountsController < ApplicationController
     end
   end
 
-  # PUT /accounts/:account_id
+  # PUT /accounts/:id
   def update
     render(json: { errors: 'Not the correct account!' }, status: :unauthorized) if current_account != @account
 
@@ -94,7 +94,7 @@ class AccountsController < ApplicationController
   end
 
   def set_account
-    @account = Account.find(params[:account_id])
+    @account = Account.find(params[:id])
   end
 
   def authorize_account
