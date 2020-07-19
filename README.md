@@ -30,6 +30,7 @@ You can only request the server from the following origins:
 - has many invitations
 
 ### Mentee
+- _classroom_: string, the mentee's google classroom url
 - has one mentor
 - has one account
 
@@ -46,6 +47,7 @@ You can only request the server from the following origins:
 
 ### Events
 - _name_: string, event name
+- _host_: string, event host
 - _description_: string, description of event
 - _link_: string, link to event (e.g. zoom link)
 - _image_url_: string, event picture url (NOT IN USE)
@@ -70,8 +72,8 @@ _IMPORTANT: for all endpoints EXCEPT for login and POST /newsletter_emails, you 
 ### Account
 - _GET /login_: returns account corresponding to token
 - _GET /accounts_: returns list of all accounts (MUST be `is_master`)
-- _GET /accounts/:id_: returns account information corresponding to `:account_id` (MUST be same account as `current_account`)
-- _PUT /accounts/:id_: updates account information corresponding to `:account_id` (MUST be same account as `current_account`)
+- _GET /accounts/:id_: returns account information corresponding to `:account_id` (MUST be same account as `current_account` or `is_master`)
+- _PUT /accounts/:id_: updates account information corresponding to `:account_id` (MUST be same account as `current_account` or `is_master`)
 
 ### Mentee
 - _GET /mentees_: returns list of all mentees (MUST be `is_master`)
@@ -79,11 +81,15 @@ _IMPORTANT: for all endpoints EXCEPT for login and POST /newsletter_emails, you 
   - allowed params: `:email` as the email of associated account
 - _POST /mentees/:mentee_id/match_: match a mentee with a mentor
   - allowed params: `:mentee_id, :mentor_id`
+- _POST /mentees/batch_: batch creation of new mentees and corresponding accounts
+  - allowed params: `:batch_emails` as a string of emails delimited by `, `
 
 ### Mentor
 - _GET /mentors_: returns list of all mentors (MUST be `is_master`)
 - _POST /mentees_: create new mentor and corresponding account
   - allowed params: `:email` as the email of associated account
+- _POST /mentors/batch_: batch creation of new mentors and corresponding accounts
+  - allowed params: `:batch_emails` as a string of emails delimited by `, `
 
 ### Newsletter Email
 - _GET /events_: returns list of all events (MUST be `is_master`)
@@ -92,7 +98,8 @@ _IMPORTANT: for all endpoints EXCEPT for login and POST /newsletter_emails, you 
 
 ### Event
 - _GET /events_: returns list of all events (MUST be `is_master`)
-- _POST /mentees_: create new event
-  - allowed params: `:name, :kind, :description, :link, :start_time, :end_time, :image_url` and `:invites` as an _array of user emails_
+- _POST /events_: create new event
+  - allowed params: `:name, :host, :kind, :description, :link, :start_time, :end_time, :image_url` and `:invites` as an _array of user emails_
   - NOTE: start_time and end_time must be sent as an ISO 8601 string
+- _GET /events/public_: returns list of all `open` events
 
