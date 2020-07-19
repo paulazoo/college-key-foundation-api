@@ -65,7 +65,7 @@ class AccountsController < ApplicationController
 
   # GET /accounts/:id
   def show
-    render(json: { errors: 'Not the correct account!' }, status: :unauthorized) if current_account != @account
+    render(json: { errors: 'Not the correct account!' }, status: :unauthorized) if (current_account != @account && !is_master)
 
     if @account.user_type == 'Mentor'
       render(json: { account: @account, user: @account.user.as_json(include: [mentees: { include: :account }]) }, status: :ok)
@@ -76,7 +76,7 @@ class AccountsController < ApplicationController
 
   # PUT /accounts/:id
   def update
-    render(json: { errors: 'Not the correct account!' }, status: :unauthorized) if current_account != @account
+    render(json: { errors: 'Not the correct account!' }, status: :unauthorized) if (current_account != @account && !is_master)
 
     @account.update(account_params)
 
