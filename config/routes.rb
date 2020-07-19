@@ -18,7 +18,7 @@ Rails.application.routes.draw do
 
   resources :events, only: %i[index create]
 
-  post 'events/public' => 'events#public'
+  get 'events/public' => 'events#public'
 
   resources :newsletter_emails, only: %i[index create]
   
