@@ -1,5 +1,5 @@
 class MenteeSerializer < ActiveModel::Serializer
-  attributes :id
+  attributes :id, :classroom
 
   has_one :account
 end

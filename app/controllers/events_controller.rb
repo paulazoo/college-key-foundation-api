@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_action :authenticate_account, only: %i[create index]
+  before_action :authenticate_account, only: %i[create index public]
 
   # GET /events
   def index
@@ -35,6 +35,12 @@ class EventsController < ApplicationController
     else
       render(json: @event.errors, status: :created)
     end
+  end
+
+  # GET /events/public
+  def public
+    @public_events = Event.where(kind: 'open')
+    render(json: @public_events, status: :ok)
   end
 
   private
