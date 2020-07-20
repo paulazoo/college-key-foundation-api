@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_action :authenticate_account, only: %i[create index public]
+  before_action :authenticate_account, only: %i[create index]
 
   # GET /events
   def index

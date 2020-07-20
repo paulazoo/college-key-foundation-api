@@ -65,7 +65,11 @@ You can only request the server from the following origins:
 
 ## HTTP Endpoints
 
-_IMPORTANT: for all endpoints EXCEPT for login and POST /newsletter_emails, you must pass a Google OAuth JWT authorization token. Pass via the following request header:_
+_IMPORTANT: for all endpoints EXCEPT for:
+  - /login
+  - POST /newsletter_emails
+  - GET /events/public
+you must pass a Google OAuth JWT authorization token. Pass via the following request header:_
 
 `Authorization: Bearer [TOKEN]`
 
