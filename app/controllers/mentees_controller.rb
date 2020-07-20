@@ -104,7 +104,7 @@ class MenteesController < ApplicationController
   private
 
   def set_mentee
-    @mentee = Mentee.find(params[:mentee_id])
+    @mentee = Mentee.find(params[:id])
   end
 
   def mentee_params

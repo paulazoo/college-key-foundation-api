@@ -1,6 +1,6 @@
 class AccountsController < ApplicationController
   before_action :authenticate_account, only: %i[show update index]
-  before_action :set_account, only: %i[show update]
+  before_action :set_account, only: %i[show update events]
   before_action :authorize_account, only: %i[show update index]
 
   # GET /login
@@ -85,6 +85,16 @@ class AccountsController < ApplicationController
     else
       render(json: @account.errors, status: :unprocessable_entity)
     end
+  end
+
+  # GET /accounts/:id/events
+  def events
+    public_events = Event.where(kind: 'open')
+    fellows_only_events = Event.where(kind: 'fellows_only')
+    invited_events = @account.invited_events
+
+    @events = public_events + fellows_only_events + invited_events
+    render(json: @events, status: :ok)
   end
 
   private
