@@ -101,6 +101,16 @@ class MenteesController < ApplicationController
     render(json: { mentees: finished_mentees, status: :ok })
   end
 
+  # POST /mentees/import
+  def import
+    session = GoogleDrive::Session.from_service_account_key("client_secret.json")
+    spreadsheet = session.spreadsheet_by_title("Testing0")
+    worksheet = spreadsheet.worksheets.first
+    output = worksheet.rows.first(10)
+
+    render(json: { message: 'Session created!', output: output })
+  end
+
   private
 
   def set_mentee

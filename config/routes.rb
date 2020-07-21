@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   end
 
   post 'mentees/batch' => 'mentees#batch'
+  post 'mentees/import' => 'mentees#import'
 
   resources :mentees, only: %i[index create]
 

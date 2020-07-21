@@ -24,10 +24,8 @@ gem 'rack-cors'
 # Cloudinary image hosting service
 gem 'cloudinary'
 
-# Excel integration
-gem 'rubyzip', '>= 1.2.1'
-gem 'axlsx', git: 'https://github.com/randym/axlsx.git', ref: 'c8ac844'
-gem 'axlsx_rails'
+# Google sheets integration
+gem 'google_drive'
 
 # To avoid polling for changes on Windows
 gem 'wdm', '>= 0.1.0' if Gem.win_platform?
