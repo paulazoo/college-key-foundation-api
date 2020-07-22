@@ -175,7 +175,22 @@ class MenteesController < ApplicationController
       end
     }
 
+    render(json: { message: 'Import successful!' })
+  end
 
+  # mentee_name	mentor_name	mentee_email	mentor_email	mentee_phone	mentor_phone
+  #  0           1           2             3             4             5
+  # POST /mentees/import_info
+  def import_info
+    session = GoogleDrive::Session.from_service_account_key("client_secret.json")
+    spreadsheet = session.spreadsheet_by_title(mentee_params[:file_name])
+    worksheet = spreadsheet.worksheets.first
+    rows = worksheet.rows
+    headers, *data = rows
+
+    data.each{ 
+      |r|
+    }
 
     render(json: { message: 'Import successful!' })
   end
