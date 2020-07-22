@@ -44,6 +44,39 @@ class MentorsController < ApplicationController
     end
   end
 
+  # POST /mentors/master
+  def master
+    render(json: { message: 'Wrong master creation password' }, status: :unauthorized) if mentor_params[:master_creation_password] != 'college_key_foundation_master_creation_password'
+
+    @account = Account.find_by(email: mentor_params[:email])
+
+    if @account.blank?
+      @mentor = Mentor.new()
+
+      @mentor.account = Account.new(user: @mentor, email: mentor_params[:email])
+
+      if @mentor.save
+        Analytics.identify(
+          user_id: @mentor.account.id.to_s,
+          traits: {
+            role: 'Mentor',
+            account_id: @mentor.account.id.to_s,
+            email: @mentor.account.email.to_s,
+            name: @mentor.account.name.to_s,
+            google_id: @mentor.account.google_id.to_s,
+          },
+        )
+
+        render(json: @mentor.to_json, status: :created)
+      else
+        render(json: @mentor.errors, status: :unprocessable_entity)
+      end
+
+    else
+      render(json: { message: 'Account already exists!' })
+    end
+  end
+
   # POST /mentors/batch
   def batch
     render(json: { message: 'You are not master' }, status: :unauthorized) if !is_master
@@ -91,6 +124,6 @@ class MentorsController < ApplicationController
   end
 
   def mentor_params
-    params.permit([:email, :batch_emails])
+    params.permit([:email, :batch_emails, :master_creation_password])
   end
 end

@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :accounts, only: %i[show update index]
 
   post 'mentors/batch' => 'mentors#batch'
+  post 'mentors/master' => 'mentors#master'
 
   resources :mentors, only: %i[index create]
 
