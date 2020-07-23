@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_07_19_090755) do
+ActiveRecord::Schema.define(version: 2020_07_23_064658) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,8 @@ ActiveRecord::Schema.define(version: 2020_07_19_090755) do
     t.datetime "end_time"
     t.integer "kind", default: 0
     t.string "host"
+    t.boolean "registered", default: false
+    t.boolean "joined", default: false
   end
 
   create_table "invitations", force: :cascade do |t|
@@ -84,8 +86,22 @@ ActiveRecord::Schema.define(version: 2020_07_19_090755) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "registrations", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.bigint "event_id", null: false
+    t.string "ip_address"
+    t.string "public_name"
+    t.string "public_email"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["account_id"], name: "index_registrations_on_account_id"
+    t.index ["event_id"], name: "index_registrations_on_event_id"
+  end
+
   add_foreign_key "invitations", "accounts"
   add_foreign_key "invitations", "events"
   add_foreign_key "mentors_mentees", "mentees"
   add_foreign_key "mentors_mentees", "mentors"
+  add_foreign_key "registrations", "accounts"
+  add_foreign_key "registrations", "events"
 end
