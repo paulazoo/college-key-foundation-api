@@ -24,6 +24,15 @@ Rails.application.routes.draw do
 
   get 'events/public' => 'events#public'
 
+  resources :events, only: [] do
+    post 'register', on: :member
+    post 'public_register', on: :member
+    post 'join', on: :member
+    post 'public_join', on: :member
+    post 'export_registered', on: :member
+    post 'export_joined', on: :member
+  end
+
   resources :events, only: %i[index create]
 
   resources :newsletter_emails, only: %i[index create]

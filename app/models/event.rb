@@ -3,6 +3,8 @@ class Event < ApplicationRecord
   
   has_many :invitations, class_name: 'Invitation', foreign_key: 'event_id', dependent: :destroy
 
+  has_many :registrations, class_name: 'Registration', foreign_key: 'event_id', dependent: :destroy
+
   validates_presence_of :name
 
 end

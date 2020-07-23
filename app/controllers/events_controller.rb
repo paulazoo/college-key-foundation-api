@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-  before_action :authenticate_account, only: %i[create index]
+  before_action :authenticate_account, only: %i[create index register join export_registered export_joined]
 
   # GET /events
   def index
@@ -33,7 +33,7 @@ class EventsController < ApplicationController
 
       render(json: @event, status: :created)
     else
-      render(json: @event.errors, status: :created)
+      render(json: @event.errors, status: :unprocessable_entity)
     end
   end
 
@@ -43,14 +43,64 @@ class EventsController < ApplicationController
     render(json: @public_events, status: :ok)
   end
 
+  # POST /events/:id/register
+  def register
+    @registration = @event.registrations.new(account: current_account, registered: true)
+
+    if @registration.save
+      render(json: @registration, status: :created)
+    else
+      render(json: @registration.errors, status: :unprocessable_entity)
+    end
+  end
+
+  # POST /events/:id/public_register
+  def public_register
+    render(json: { message: 'Not a public event' }) if @event.kind != 'open'
+
+    @registration = @event.registrations.new(ip_address: request.remote_ip, public_name: event_params[:public_name], public_email: event_params[:public_email], registered: true )
+
+    if @registration.save
+      render(json: @registration, status: :created)
+    else
+      render(json: @registration.errors, status: :unprocessable_entity)
+    end
+  end
+
+  # POST /events/:id/join
+  def join
+    render(json: { message: 'This is not yet implemented' })
+  end
+
+  # POST /events/:id/public_join
+  def public_join
+    render(json: { message: 'This is not yet implemented' })
+  end
+
+  # GET /events/:id/export_registered
+  def export_registered
+    render(json: { message: 'You are not master' }, status: :unauthorized) unless is_master
+
+    @registered = @event.registrations.where(registered: true)
+    render(json: @registered)
+  end
+  
+  # GET /events/:id/export_joined
+  def export_joined
+    render(json: { message: 'You are not master' }, status: :unauthorized) unless is_master
+    
+    @joined = @event.registrations.where(joined: true)
+    render(json: @joined)
+  end
+
   private
 
   def set_event
-    @event = Event.find(params[:event_id])
+    @event = Event.find(params[:id])
   end
 
   def event_params
-    params.permit([:name, :description, :link, :kind, :start_time, :end_time, :image_url, :host, invites: []])
+    params.permit([:name, :description, :link, :kind, :start_time, :end_time, :image_url, :host, :public_name, :public_email, invites: []])
   end
   
 end
