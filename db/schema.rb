@@ -85,7 +85,7 @@ ActiveRecord::Schema.define(version: 2020_07_23_064658) do
   end
 
   create_table "registrations", force: :cascade do |t|
-    t.bigint "account_id", null: false
+    t.bigint "account_id"
     t.bigint "event_id", null: false
     t.string "ip_address"
     t.string "public_name"
