@@ -94,7 +94,12 @@ class AccountsController < ApplicationController
     invited_events = @account.invited_events
 
     @events = public_events + fellows_only_events + invited_events
-    render(json: @events, status: :ok)
+
+    @events.each do |event|
+      event.current_account = current_account
+    end
+
+    render(json: @events.to_json(methods: [:account_registration]), status: :ok)
   end
 
   private

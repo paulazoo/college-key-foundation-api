@@ -46,8 +46,6 @@ ActiveRecord::Schema.define(version: 2020_07_23_064658) do
     t.datetime "end_time"
     t.integer "kind", default: 0
     t.string "host"
-    t.boolean "registered", default: false
-    t.boolean "joined", default: false
   end
 
   create_table "invitations", force: :cascade do |t|
@@ -94,6 +92,8 @@ ActiveRecord::Schema.define(version: 2020_07_23_064658) do
     t.string "public_email"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.boolean "registered", default: false
+    t.boolean "joined", default: false
     t.index ["account_id"], name: "index_registrations_on_account_id"
     t.index ["event_id"], name: "index_registrations_on_event_id"
   end

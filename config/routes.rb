@@ -26,6 +26,7 @@ Rails.application.routes.draw do
 
   resources :events, only: [] do
     post 'register', on: :member
+    post 'unregister', on: :member
     post 'public_register', on: :member
     post 'join', on: :member
     post 'public_join', on: :member

@@ -11,7 +11,7 @@ class CreateRegistrations < ActiveRecord::Migration[6.0]
       t.timestamps
     end
     
-    add_column(:events, :registered, :boolean, default: false)
-    add_column(:events, :joined, :boolean, default: false)
+    add_column(:registrations, :registered, :boolean, default: false)
+    add_column(:registrations, :joined, :boolean, default: false)
   end
 end

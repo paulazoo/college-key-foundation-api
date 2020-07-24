@@ -1,5 +1,6 @@
 class EventsController < ApplicationController
-  before_action :authenticate_account, only: %i[create index register join export_registered export_joined]
+  before_action :authenticate_account, only: %i[create index register unregister join export_registered export_joined]
+  before_action :set_event, only: [:register, :unregister, :join, :public_register, :public_join, :export_registered, :export_joined]
 
   # GET /events
   def index
@@ -45,10 +46,29 @@ class EventsController < ApplicationController
 
   # POST /events/:id/register
   def register
-    @registration = @event.registrations.new(account: current_account, registered: true)
+    @registration = @event.registrations.find_or_create_by(account: current_account)
+
+    @registration.update(registered: true)
 
     if @registration.save
-      render(json: @registration, status: :created)
+      @event.current_account = current_account
+
+      render(json: @event.to_json(methods: [:account_registration]), status: :created)
+    else
+      render(json: @registration.errors, status: :unprocessable_entity)
+    end
+  end
+
+  # POST /events/:id/unregister
+  def unregister
+    @registration = @event.registrations.find_or_create_by(account: current_account)
+
+    @registration.update(registered: false)
+
+    if @registration.save
+      @event.current_account = current_account
+
+      render(json: @event.to_json(methods: [:account_registration]), status: :created)
     else
       render(json: @registration.errors, status: :unprocessable_entity)
     end
@@ -69,12 +89,30 @@ class EventsController < ApplicationController
 
   # POST /events/:id/join
   def join
-    render(json: { message: 'This is not yet implemented' })
+    @registration = @event.registrations.where(account: current_account).first
+
+    @registration.update(joined: true)
+
+    if @registration.save
+      @event.current_account = current_account
+
+      render(json: @event.to_json(methods: [:account_registration]), status: :created)
+    else
+      render(json: @registration.errors, status: :unprocessable_entity)
+    end
   end
 
   # POST /events/:id/public_join
   def public_join
-    render(json: { message: 'This is not yet implemented' })
+    @registration = @event.registrations.where(ip_address: request.remote_ip).first
+
+    @registration.update(joined: true)
+
+    if @registration.save
+      render(json: @registration, status: :created)
+    else
+      render(json: @registration.errors, status: :unprocessable_entity)
+    end
   end
 
   # GET /events/:id/export_registered
@@ -82,15 +120,15 @@ class EventsController < ApplicationController
     render(json: { message: 'You are not master' }, status: :unauthorized) unless is_master
 
     @registered = @event.registrations.where(registered: true)
-    render(json: @registered)
+    render(json: { message: 'Export successful!'})
   end
-  
+
   # GET /events/:id/export_joined
   def export_joined
     render(json: { message: 'You are not master' }, status: :unauthorized) unless is_master
-    
+
     @joined = @event.registrations.where(joined: true)
-    render(json: @joined)
+    render(json: { message: 'Export successful!'})
   end
 
   private
