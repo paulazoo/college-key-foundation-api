@@ -78,7 +78,9 @@ class EventsController < ApplicationController
   def public_register
     render(json: { message: 'Not a public event' }) if @event.kind != 'open'
 
-    @registration = @event.registrations.new(ip_address: request.remote_ip, public_name: event_params[:public_name], public_email: event_params[:public_email], registered: true )
+    @registration = @event.registrations.find_or_create_by(ip_address: request.remote_ip.to_s)
+
+    @registration.update(public_name: event_params[:public_name], public_email: event_params[:public_email], registered: true)
 
     if @registration.save
       render(json: @registration, status: :created)
@@ -89,7 +91,7 @@ class EventsController < ApplicationController
 
   # POST /events/:id/join
   def join
-    @registration = @event.registrations.where(account: current_account).first
+    @registration = @event.registrations.find_or_create_by(account: current_account)
 
     @registration.update(joined: true)
 
@@ -104,7 +106,7 @@ class EventsController < ApplicationController
 
   # POST /events/:id/public_join
   def public_join
-    @registration = @event.registrations.where(ip_address: request.remote_ip).first
+    @registration = @event.registrations.find_or_create_by(ip_address: request.remote_ip.to_s)
 
     @registration.update(joined: true)
 
