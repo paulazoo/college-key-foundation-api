@@ -122,6 +122,43 @@ class EventsController < ApplicationController
     render(json: { message: 'You are not master' }, status: :unauthorized) unless is_master
 
     @registered = @event.registrations.where(registered: true)
+
+    session = GoogleDrive::Session.from_service_account_key("client_secret.json")
+    spreadsheet = session.spreadsheet_by_title(event_params[:file_name])
+    worksheet = spreadsheet.worksheets.first
+
+    worksheet.insert_rows(worksheet.num_rows + 1,
+      [
+        ["Event Id:", @event.id.to_s],
+        ["Nam:", @event.name],
+        ["Hosted by:", @event.host],
+        ["Kind:", @event.kind],
+        ["Start Time:", @event.start_time.to_s],
+        ["End Time:", @event.end_time.to_s],
+        [""],
+        ["Logged In?", "Account Type", "Account Name", "Account Email", "Account Phone", "Ip Address", "Public Name", "Public Email"]
+      ]
+    )
+
+    @registered.each{ 
+      |r|
+      if !r.account.blank?
+        worksheet.insert_rows(worksheet.num_rows + 1,
+          [
+            ["Yes!", r.account.user_type, r.account.name, r.account.email, r.account.phone, "N/A", "N/A", "N/A"],
+          ]
+        )
+      else
+        worksheet.insert_rows(worksheet.num_rows + 1,
+          [
+            ["No", "N/A", "N/A", "N/A", "N/A", r.ip_address, r.public_name, r.public_email],
+          ]
+        )
+      end
+    }
+
+    worksheet.save
+
     render(json: { message: 'Export successful!'})
   end
 
@@ -140,7 +177,7 @@ class EventsController < ApplicationController
   end
 
   def event_params
-    params.permit([:name, :description, :link, :kind, :start_time, :end_time, :image_url, :host, :public_name, :public_email, invites: []])
+    params.permit([:name, :description, :link, :kind, :start_time, :end_time, :image_url, :host, :public_name, :public_email, :file_name, invites: []])
   end
   
 end
