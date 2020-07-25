@@ -38,6 +38,45 @@ class EventsController < ApplicationController
     end
   end
 
+  # name, description, link, kind, start_time, end_time, image_url, host, invites: []
+  #  0    1            2     3     4           5          6          7     8
+  # POST /events/import_batch
+  def import_batch
+    session = GoogleDrive::Session.from_service_account_key("client_secret.json")
+    spreadsheet = session.spreadsheet_by_title(event_params[:file_name])
+    worksheet = spreadsheet.worksheets.first
+    rows = worksheet.rows
+    headers, *data = rows
+
+    data.each{ 
+      |r|
+
+      @event = Event.new(name: r[0], kind: r[3])
+      @event.description = r[1] if r[1]
+      @event.link = r[2] if r[2]
+      @event.image_url = r[6] if r[6]
+      @event.host = r[7] if r[7]
+  
+      @event.start_time = DateTime.iso8601(r[4]) if r[4]
+      @event.end_time = DateTime.iso8601(r[5]) if r[5]
+  
+      if @event.save
+  
+        if @event.kind === 'invite-only' && r[8].split(", ")
+          r[8].split(", ").each do |email|
+            a = Account.find_or_create_by(email: email)
+            @event.invitations.create!(account: a)
+          end
+        end
+  
+      else
+        puts @event.errors
+      end
+    }
+
+    render(json: { message: "Import successful!" })
+  end
+
   # GET /events/public
   def public
     @public_events = Event.where(kind: 'open')

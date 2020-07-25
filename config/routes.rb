@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   get 'events/public' => 'events#public'
 
   resources :events, only: [] do
+    post 'import_batch', on: :member
     post 'register', on: :member
     post 'unregister', on: :member
     post 'public_register', on: :member
