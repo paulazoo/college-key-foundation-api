@@ -102,6 +102,13 @@ class AccountsController < ApplicationController
     render(json: @events.to_json(methods: [:account_registration]), status: :ok)
   end
 
+  # POST /accounts/:id/mail
+  def mail
+    AccountMailer.welcome_email.deliver_later
+
+    render(json: { message: 'Email sent!' })
+  end
+
   private
 
   def account_params

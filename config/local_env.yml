@@ -2,3 +2,5 @@
 COLLEGE_KEY_FOUNDATION_DATABASE_PASSWORD: 'college_key_foundation'
 SKIP_SASS_BINARY_DOWNLOAD_FOR_CI: 'true'
 SKIP_NODE_SASS_TESTS: 'true'
+GMAIL_USERNAME: 'sparklessammy@gmail.com'
+GMAIL_PASSWORD: 'IamSammy100%'

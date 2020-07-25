@@ -4,6 +4,7 @@ Rails.application.routes.draw do
 
   resources :accounts, only: [] do
     get 'events', on: :member
+    post 'mail', on: :member
   end
 
   resources :accounts, only: %i[show update index]
