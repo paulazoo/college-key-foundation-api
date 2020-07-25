@@ -104,7 +104,7 @@ class AccountsController < ApplicationController
 
   # POST /accounts/:id/mail
   def mail
-    AccountMailer.welcome_email.deliver_later
+    AccountMailer.welcome_email().deliver_later
 
     render(json: { message: 'Email sent!' })
   end
