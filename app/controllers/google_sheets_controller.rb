@@ -57,7 +57,7 @@ class GoogleSheetsController < ApplicationController
     worksheet.insert_rows(worksheet.num_rows + 1,
       [
         ["Event Id:", @event.id.to_s],
-        ["Nam:", @event.name],
+        ["Name:", @event.name],
         ["Hosted by:", @event.host],
         ["Kind:", @event.kind],
         ["Start Time:", @event.start_time.to_s],
@@ -84,6 +84,12 @@ class GoogleSheetsController < ApplicationController
       end 
     }
 
+    worksheet.insert_rows(worksheet.num_rows + 1,
+      [
+        ["-"],
+      ]
+    )
+
     worksheet.save
 
     render(json: { message: 'Export successful!'})
@@ -105,7 +111,7 @@ class GoogleSheetsController < ApplicationController
     worksheet.insert_rows(worksheet.num_rows + 1,
       [
         ["Event Id:", @event.id.to_s],
-        ["Nam:", @event.name],
+        ["Name:", @event.name],
         ["Hosted by:", @event.host],
         ["Kind:", @event.kind],
         ["Start Time:", @event.start_time.to_s],
@@ -131,6 +137,12 @@ class GoogleSheetsController < ApplicationController
         )
       end 
     }
+
+    worksheet.insert_rows(worksheet.num_rows + 1,
+      [
+        ["-"],
+      ]
+    )
 
     worksheet.save
 
