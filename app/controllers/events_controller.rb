@@ -17,6 +17,7 @@ class EventsController < ApplicationController
     @event = Event.new(name: event_params[:name], kind: event_params[:kind])
     @event.description = event_params[:description] if event_params[:description]
     @event.link = event_params[:link] if event_params[:link]
+    @event.link = event_params[:public_link] if (event_params[:public_link] && event_params[:kind] == 'open')
     @event.image_url = event_params[:image_url] if event_params[:image_url]
     @event.host = event_params[:host] if event_params[:host]
 
@@ -175,22 +176,21 @@ class EventsController < ApplicationController
         ["Start Time:", @event.start_time.to_s],
         ["End Time:", @event.end_time.to_s],
         [""],
-        ["Logged In?", "Account Type", "Account Name", "Account Email", "Account Phone", "Ip Address", "Public Name", "Public Email"]
+        ["Logged In?", "Account Type", "Account Name", "Account Email", "Account Phone", "Ip Address", "Public Name", "Public Email", "Registered?", "Joined?"]
       ]
     )
 
-    @registered.each{ 
-      |r|
+    @registered.each{ |r|
       if !r.account.blank?
         worksheet.insert_rows(worksheet.num_rows + 1,
           [
-            ["Yes!", r.account.user_type, r.account.name, r.account.email, r.account.phone, "N/A", "N/A", "N/A"],
+            ["Yes", r.account.user_type, r.account.name, r.account.email, r.account.phone, "N/A", "N/A", "N/A", r.registered, r.joined],
           ]
         )
       else
         worksheet.insert_rows(worksheet.num_rows + 1,
           [
-            ["No", "N/A", "N/A", "N/A", "N/A", r.ip_address, r.public_name, r.public_email],
+            ["No", "N/A", "N/A", "N/A", "N/A", r.ip_address, r.public_name, r.public_email, r.registered, r.joined],
           ]
         )
       end
@@ -206,6 +206,42 @@ class EventsController < ApplicationController
     render(json: { message: 'You are not master' }, status: :unauthorized) unless is_master
 
     @joined = @event.registrations.where(joined: true)
+
+    session = GoogleDrive::Session.from_service_account_key("client_secret.json")
+    spreadsheet = session.spreadsheet_by_title(event_params[:file_name])
+    worksheet = spreadsheet.worksheets.first
+
+    worksheet.insert_rows(worksheet.num_rows + 1,
+      [
+        ["Event Id:", @event.id.to_s],
+        ["Nam:", @event.name],
+        ["Hosted by:", @event.host],
+        ["Kind:", @event.kind],
+        ["Start Time:", @event.start_time.to_s],
+        ["End Time:", @event.end_time.to_s],
+        [""],
+        ["Logged In?", "Account Type", "Account Name", "Account Email", "Account Phone", "Ip Address", "Public Name", "Public Email", "Registered?", "Joined?"]
+      ]
+    )
+
+    @joined.each{ |r| 
+      if !r.account.blank?
+        worksheet.insert_rows(worksheet.num_rows + 1,
+          [
+            ["Yes", r.account.user_type, r.account.name, r.account.email, r.account.phone, "N/A", "N/A", "N/A", r.registered, r.joined],
+          ]
+        )
+      else
+        worksheet.insert_rows(worksheet.num_rows + 1,
+          [
+            ["No", "N/A", "N/A", "N/A", "N/A", r.ip_address, r.public_name, r.public_email, r.registered, r.joined],
+          ]
+        )
+      end
+    }
+
+    worksheet.save
+
     render(json: { message: 'Export successful!'})
   end
 
@@ -216,7 +252,8 @@ class EventsController < ApplicationController
   end
 
   def event_params
-    params.permit([:name, :description, :link, :kind, :start_time, :end_time, :image_url, :host, :public_name, :public_email, :file_name, invites: []])
+    params.permit([:name, :description, :link, :kind, :start_time, :end_time, :image_url, :host, :public_link, \
+      :public_name, :public_email, :file_name, :public_link, invites: []])
   end
   
 end
