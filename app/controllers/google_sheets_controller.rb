@@ -21,8 +21,8 @@ class GoogleSheetsController < ApplicationController
       @event.host = r[7] if r[7]
       @event.public_link = r[8] if (r[8] && r[3] == 'open')
   
-      @event.start_time = DateTime.iso8601(r[4]) if r[4]
-      @event.end_time = DateTime.iso8601(r[5]) if r[5]
+      @event.start_time = r[4].to_time if r[4]
+      @event.end_time = r[5].to_time if r[5]
   
       if @event.save
   
