@@ -1,19 +1,20 @@
 class EventsController < ApplicationController
-  before_action :authenticate_account, only: %i[create index register unregister join export_registered export_joined]
-  before_action :set_event, only: [:register, :unregister, :join, :public_register, :public_join, :export_registered, :export_joined]
+  before_action :authenticate_account, only: %i[create index update destroy register unregister join export_registered export_joined]
+  before_action :set_event, only: [:update, :destroy, \
+    :register, :unregister, :join, :public_register, :public_join, :export_registered, :export_joined]
 
   # GET /events
   def index
-    if is_master
-      @events = Event.all
-      json_response(@events)
-    else
-      render(json: { message: 'You are not master' }, status: :unauthorized)
-    end
+    render(json: { message: 'You are not master' }, status: :unauthorized) unless is_master
+    
+    @events = Event.all
+    json_response(@events)
   end
 
   # POST /events
   def create
+    render(json: { message: 'You are not master' }, status: :unauthorized) unless is_master
+
     @event = Event.new(name: event_params[:name], kind: event_params[:kind])
     @event.description = event_params[:description] if event_params[:description]
     @event.link = event_params[:link] if event_params[:link]
@@ -37,6 +38,46 @@ class EventsController < ApplicationController
     else
       render(json: @event.errors, status: :unprocessable_entity)
     end
+  end
+
+  # PUT /events/:event_id
+  def update
+    render(json: { message: 'You are not master' }, status: :unauthorized) unless is_master
+
+    @event.name = event_params[:name] if event_params[:name]
+    @event.kind = event_params[:kind] if event_params[:kind]
+    @event.description = event_params[:description] if event_params[:description]
+    @event.link = event_params[:link] if event_params[:link]
+    @event.link = event_params[:public_link] if (event_params[:public_link] && event_params[:kind] == 'open')
+    @event.image_url = event_params[:image_url] if event_params[:image_url]
+    @event.host = event_params[:host] if event_params[:host]
+
+    @event.start_time = DateTime.iso8601(event_params[:start_time]) if event_params[:start_time]
+    @event.end_time = DateTime.iso8601(event_params[:end_time]) if event_params[:end_time]
+
+    if @event.save
+
+      if @event.kind === 'invite-only' && event_params[:invites]
+        event_params[:invitees].each do |email|
+          a = Account.find_or_create_by(email: email)
+          @event.invitations.create!(account: a)
+        end
+      end
+
+      render(json: @event, status: :created)
+    else
+      render(json: @event.errors, status: :unprocessable_entity)
+    end
+  end
+
+  # DELETE /events/:event_id
+  def destroy
+    render(json: { message: 'You are not master' }, status: :unauthorized) unless is_master
+
+    @event.destroy
+    head(:no_content)
+
+    render(json: { message: 'Successfully deleted' }, status: :ok)
   end
 
   # GET /events/public

@@ -32,7 +32,7 @@ Rails.application.routes.draw do
     post 'public_join', on: :member
   end
 
-  resources :events, only: %i[index create]
+  resources :events, only: %i[index create update destroy]
 
   resources :newsletter_emails, only: %i[index create]
   
