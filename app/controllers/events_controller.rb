@@ -6,9 +6,14 @@ class EventsController < ApplicationController
   # GET /events
   def index
     render(json: { message: 'You are not master' }, status: :unauthorized) unless is_master
-    
+
     @events = Event.all
-    json_response(@events)
+    
+    @events.each do |event|
+      event.current_account = current_account
+    end
+    
+    render(json: @events.to_json(methods: [:account_registration]), status: :ok)
   end
 
   # POST /events
