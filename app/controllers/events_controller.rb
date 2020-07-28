@@ -80,7 +80,6 @@ class EventsController < ApplicationController
     render(json: { message: 'You are not master' }, status: :unauthorized) unless is_master
 
     @event.destroy
-    head(:no_content)
 
     render(json: { message: 'Successfully deleted' }, status: :ok)
   end
