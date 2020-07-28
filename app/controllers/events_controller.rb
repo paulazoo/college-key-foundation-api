@@ -23,7 +23,7 @@ class EventsController < ApplicationController
     @event = Event.new(name: event_params[:name], kind: event_params[:kind])
     @event.description = event_params[:description] if event_params[:description]
     @event.link = event_params[:link] if event_params[:link]
-    @event.link = event_params[:public_link] if (event_params[:public_link] && event_params[:kind] == 'open')
+    @event.public_link = event_params[:public_link] if (event_params[:public_link] && event_params[:kind] == 'open')
     @event.image_url = event_params[:image_url] if event_params[:image_url]
     @event.host = event_params[:host] if event_params[:host]
 
@@ -53,7 +53,7 @@ class EventsController < ApplicationController
     @event.kind = event_params[:kind] if event_params[:kind]
     @event.description = event_params[:description] if event_params[:description]
     @event.link = event_params[:link] if event_params[:link]
-    @event.link = event_params[:public_link] if (event_params[:public_link] && event_params[:kind] == 'open')
+    @event.public_link = event_params[:public_link] if (event_params[:public_link] && event_params[:kind] == 'open')
     @event.image_url = event_params[:image_url] if event_params[:image_url]
     @event.host = event_params[:host] if event_params[:host]
 
