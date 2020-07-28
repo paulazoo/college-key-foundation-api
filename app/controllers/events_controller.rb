@@ -49,7 +49,7 @@ class EventsController < ApplicationController
   def register
     @registration = @event.registrations.find_or_create_by(account: current_account)
 
-    @registration.update(registered: true)
+    @registration.registered = true
 
     if @registration.save
       @event.current_account = current_account
@@ -64,7 +64,7 @@ class EventsController < ApplicationController
   def unregister
     @registration = @event.registrations.find_or_create_by(account: current_account)
 
-    @registration.update(registered: false)
+    @registration.registered = false
 
     if @registration.save
       @event.current_account = current_account
@@ -94,7 +94,7 @@ class EventsController < ApplicationController
   def join
     @registration = @event.registrations.find_or_create_by(account: current_account)
 
-    @registration.update(joined: true)
+    @registration.joined = true
 
     if @registration.save
       @event.current_account = current_account
@@ -109,7 +109,7 @@ class EventsController < ApplicationController
   def public_join
     @registration = @event.registrations.find_or_create_by(ip_address: request.remote_ip.to_s)
 
-    @registration.update(joined: true)
+    @registration.joined = false
 
     if @registration.save
       render(json: @registration, status: :created)
