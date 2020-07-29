@@ -77,8 +77,14 @@ class AccountsController < ApplicationController
   # PUT /accounts/:id
   def update
     render(json: { errors: 'Not the correct account!' }, status: :unauthorized) if (current_account != @account)
-
-    @account.update(account_params)
+ 
+    @account.email = account_params[:email] if account_params[:email]
+    @account.phone = account_params[:phone] if account_params[:phone]
+    @account.bio = account_params[:bio] if account_params[:bio]
+    @account.display_name = account_params[:display_name] if account_params[:display_name]
+    @account.grad_year = account_params[:grad_year] if account_params[:grad_year]
+    @account.school = account_params[:school] if account_params[:school]
+    @account.image_url = account_params[:image_url] if account_params[:image_url]
 
     if @account.save
       render(json: @account, status: :ok)
@@ -91,7 +97,13 @@ class AccountsController < ApplicationController
   def master_update
     render(json: { message: 'You are not master' }, status: :unauthorized) unless is_master
 
-    @account.update(account_params)
+    @account.email = account_params[:email] if account_params[:email]
+    @account.phone = account_params[:phone] if account_params[:phone]
+    @account.bio = account_params[:bio] if account_params[:bio]
+    @account.display_name = account_params[:display_name] if account_params[:display_name]
+    @account.grad_year = account_params[:grad_year] if account_params[:grad_year]
+    @account.school = account_params[:school] if account_params[:school]
+    @account.image_url = account_params[:image_url] if account_params[:image_url]
 
     if @account.save
       render(json: @account, status: :ok)
