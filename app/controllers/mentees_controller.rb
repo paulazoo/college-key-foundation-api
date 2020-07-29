@@ -1,6 +1,6 @@
 class MenteesController < ApplicationController
-  before_action :authenticate_account, only: %i[create index match batch]
-  before_action :set_mentee, only: %i[match]
+  before_action :authenticate_account, only: %i[create index match unmatch batch]
+  before_action :set_mentee, only: %i[match unmatch]
 
   # GET mentees
   def index
@@ -60,6 +60,23 @@ class MenteesController < ApplicationController
     else
       render(json: @mentor.errors, status: :unprocessable_entity)
     end
+  end
+
+  # POST /mentees/:mentee_id/unmatch
+  def unmatch
+    render(json: { message: 'You are not master' }, status: :unauthorized) if !is_master
+
+    @mentee = Mentee.find(mentee_params[:mentee_id])
+    render(json: { message: 'Mentee does not exist' }) if @mentee.blank?
+
+    @mentor = Mentor.find(mentee_params[:mentor_id])
+    render(json: { message: 'Mentor does not exist'}) if @mentor.blank?
+
+    @mentors_mentee = MentorMentee.find_by(mentor: @mentor, mentee: @mentee)
+    render(json: { message: 'Not matched' }) if @mentors_mentee.blank?
+
+    @mentors_mentee.destroy
+    render(json: { message: 'Succesfully deleted' }, status: :ok)
   end
 
   # POST /mentees/batch

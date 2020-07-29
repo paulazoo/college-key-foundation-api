@@ -27,6 +27,11 @@ gem 'cloudinary'
 # Google sheets integration
 gem 'google_drive'
 
+# Omniauth
+# gem 'omniauth'
+# gem 'omniauth-groupme', git: 'https://github.com/Bark-us/omniauth-groupme'
+# 
+
 # To avoid polling for changes on Windows
 gem 'wdm', '>= 0.1.0' if Gem.win_platform?
 

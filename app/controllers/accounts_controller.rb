@@ -1,6 +1,6 @@
 class AccountsController < ApplicationController
-  before_action :authenticate_account, only: %i[show update index]
-  before_action :set_account, only: %i[show update events]
+  before_action :authenticate_account, only: %i[show update index master_update]
+  before_action :set_account, only: %i[show update events master_update]
   before_action :authorize_account, only: %i[show update index]
 
   # GET /login
@@ -76,7 +76,20 @@ class AccountsController < ApplicationController
 
   # PUT /accounts/:id
   def update
-    render(json: { errors: 'Not the correct account!' }, status: :unauthorized) if (current_account != @account && !is_master)
+    render(json: { errors: 'Not the correct account!' }, status: :unauthorized) if (current_account != @account)
+
+    @account.update(account_params)
+
+    if @account.save
+      render(json: @account, status: :ok)
+    else
+      render(json: @account.errors, status: :unprocessable_entity)
+    end
+  end
+
+  # PUT /accounts/:id/master_update
+  def master_update
+    render(json: { message: 'You are not master' }, status: :unauthorized) unless is_master
 
     @account.update(account_params)
 
@@ -112,7 +125,7 @@ class AccountsController < ApplicationController
   private
 
   def account_params
-    params.permit(:image_url, :bio, :display_name, :phone, :school, :grad_year)
+    params.permit(:image_url, :bio, :display_name, :phone, :school, :grad_year, :email)
   end
 
   def set_account

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :accounts, only: [] do
     get 'events', on: :member
     post 'mail', on: :member
+    put 'master_update', on: :member
   end
 
   resources :accounts, only: %i[show update index]
@@ -16,6 +17,7 @@ Rails.application.routes.draw do
 
   resources :mentees, only: [] do
     post 'match', on: :member
+    post 'unmatch', on: :member
   end
 
   post 'mentees/batch' => 'mentees#batch'
