@@ -28,9 +28,9 @@ gem 'cloudinary'
 gem 'google_drive'
 
 # Omniauth
-# gem 'omniauth'
-# gem 'omniauth-groupme', git: 'https://github.com/Bark-us/omniauth-groupme'
-# 
+gem 'omniauth'
+gem 'omniauth-groupme', git: 'https://github.com/Bark-us/omniauth-groupme'
+gem 'omniauth-google-oauth2'
 
 # To avoid polling for changes on Windows
 gem 'wdm', '>= 0.1.0' if Gem.win_platform?

@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # Auth testing
+  
+
 
   get 'login' => 'accounts#login'
 
