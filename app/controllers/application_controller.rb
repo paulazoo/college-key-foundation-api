@@ -41,6 +41,11 @@ class ApplicationController < ActionController::API
   end
 
   def is_master
-    (current_account.email == 'paulazhu@college.harvard.edu' || current_account.email == 'collegekeyfoundation@gmail.com')
+    (current_account.email == 'paulazhu@college.harvard.edu' || \
+      current_account.email == 'collegekeyfoundation@gmail.com' || \
+      current_account.email == 'snalani731@gmail.com' || \
+      current_account.email == 'llin1@college.harvard.edu' || \
+      current_account.email == 'lindalin2812@gmail.com'
+    )
   end
 end
