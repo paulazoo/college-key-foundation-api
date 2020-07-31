@@ -2,10 +2,11 @@ Rails.application.routes.draw do
 
   get 'login' => 'accounts#login'
 
+  put 'accounts/master_update' => 'accounts#master_update'
+
   resources :accounts, only: [] do
     get 'events', on: :member
     post 'mail', on: :member
-    put 'master_update', on: :member
   end
 
   resources :accounts, only: %i[show update index]

@@ -1,6 +1,6 @@
 class AccountsController < ApplicationController
   before_action :authenticate_account, only: %i[show update index master_update]
-  before_action :set_account, only: %i[show update events master_update]
+  before_action :set_account, only: %i[show update events]
   before_action :authorize_account, only: %i[show update index]
 
   # GET /login
@@ -93,22 +93,24 @@ class AccountsController < ApplicationController
     end
   end
 
-  # PUT /accounts/:id/master_update
+  # PUT /accounts/master_update
   def master_update
     render(json: { message: 'You are not master' }, status: :unauthorized) unless is_master
 
-    @account.email = account_params[:email] if account_params[:email]
-    @account.phone = account_params[:phone] if account_params[:phone]
-    @account.bio = account_params[:bio] if account_params[:bio]
-    @account.display_name = account_params[:display_name] if account_params[:display_name]
-    @account.grad_year = account_params[:grad_year] if account_params[:grad_year]
-    @account.school = account_params[:school] if account_params[:school]
-    @account.image_url = account_params[:image_url] if account_params[:image_url]
+    other_account = Account.find(account_params[:other_account_id])
 
-    if @account.save
-      render(json: @account, status: :ok)
+    other_account.email = account_params[:email] if account_params[:email]
+    other_account.phone = account_params[:phone] if account_params[:phone]
+    other_account.bio = account_params[:bio] if account_params[:bio]
+    other_account.display_name = account_params[:display_name] if account_params[:display_name]
+    other_account.grad_year = account_params[:grad_year] if account_params[:grad_year]
+    other_account.school = account_params[:school] if account_params[:school]
+    other_account.image_url = account_params[:image_url] if account_params[:image_url]
+
+    if other_account.save
+      render(json: other_account, status: :ok)
     else
-      render(json: @account.errors, status: :unprocessable_entity)
+      render(json: other_account.errors, status: :unprocessable_entity)
     end
   end
 
@@ -137,7 +139,8 @@ class AccountsController < ApplicationController
   private
 
   def account_params
-    params.permit(:image_url, :bio, :display_name, :phone, :school, :grad_year, :email)
+    params.permit(:image_url, :bio, :display_name, :phone, :school, :grad_year, :email, \
+      :other_account_id)
   end
 
   def set_account
