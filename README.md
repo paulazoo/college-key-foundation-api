@@ -2,7 +2,7 @@
 
 ## General
 
-API backend for College Key Foundation website, written in Ruby on Rails by Paula Zhu.
+Old API backend for College Key Foundation website, written in Ruby on Rails by Paula Zhu.
 
 You can only request the server from the following origins:
 
