@@ -8,6 +8,8 @@ class AccountsController < ApplicationController
     decoded_hash = decoded_token
     logger.debug(decoded_hash)
     if decoded_hash && !decoded_hash.empty?
+      # do security stuff
+      
       account_id = decoded_hash[0]['sub']
       email = decoded_hash[0]['email']
       name = decoded_hash[0]['name']
